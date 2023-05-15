@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import java.util.List;
 
 public class StretchMethod extends SimpleChangeMethod {
-    protected StretchMethod(List<Object> resultQueue, JSONObject parameters) {
+    public StretchMethod(List<Object> resultQueue, JSONObject parameters) {
         super(resultQueue, parameters);
     }
 

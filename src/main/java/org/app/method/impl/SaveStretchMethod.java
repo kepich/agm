@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import java.util.List;
 
 public class SaveStretchMethod extends SimpleChangeMethod {
-    protected SaveStretchMethod(List<Object> resultQueue, JSONObject parameters) {
+    public SaveStretchMethod(List<Object> resultQueue, JSONObject parameters) {
         super(resultQueue, parameters);
     }
 

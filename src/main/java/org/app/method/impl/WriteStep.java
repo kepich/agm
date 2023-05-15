@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class WriteStep extends AbstractMethod<Object> {
-    protected WriteStep() {
+    public WriteStep() {
         super(null, null);
     }
 

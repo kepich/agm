@@ -1,15 +1,14 @@
 package org.app.method;
 
-import org.app.method.impl.ChangeToneMethod;
-import org.app.method.impl.ChangeVolumeMethod;
-import org.app.method.impl.SaveStretchMethod;
-import org.app.method.impl.StretchMethod;
+import org.app.method.impl.*;
 
 public enum MethodType {
-    M1(StretchMethod.class),
-    M2(SaveStretchMethod.class),
-    M3(ChangeToneMethod.class),
-    M4(ChangeVolumeMethod.class);
+    StretchMethod(StretchMethod.class),
+    SaveStretchMethod(SaveStretchMethod.class),
+    ChangeToneMethod(ChangeToneMethod.class),
+    ChangeVolumeMethod(ChangeVolumeMethod.class),
+    InterferenceMethod(InterferenceMethod.class),
+    RandomVolumeMethod(RandomVolumeMethod.class);
 
     private final Class castType;
     MethodType(Class clazz) {

@@ -1,20 +1,20 @@
 [
   {
-    "type": "M1",
-    "from": 1,
-    "to": 2,
+    "type": "StretchMethod",
+    "from": 1.0,
+    "to": 2.0,
     "step": 0.01
   },
   {
-    "type": "M2",
-    "from": 1,
-    "to": 2,
+    "type": "SaveStretchMethod",
+    "from": 1.0,
+    "to": 2.0,
     "step": 0.01
   },
   {
-    "type": "M3",
-    "from": 1,
-    "to": 2,
+    "type": "ChangeToneMethod",
+    "from": 1.0,
+    "to": 2.0,
     "step": 0.01
   }
 ]

@@ -5,9 +5,9 @@ import org.json.simple.JSONObject;
 import java.util.List;
 
 public abstract class SimpleChangeMethod extends AbstractMethod<Object> {
-    private float from;
-    private float to;
-    private float step;
+    private double from;
+    private double to;
+    private double step;
 
     protected SimpleChangeMethod(List<Object> resultQueue, JSONObject parameters) {
         super(resultQueue, parameters);
@@ -15,8 +15,8 @@ public abstract class SimpleChangeMethod extends AbstractMethod<Object> {
 
     @Override
     public void initParameters(JSONObject parameters) {
-        this.from = (float) parameters.get("from");
-        this.to = (float) parameters.get("to");
-        this.step = (float) parameters.get("step");
+        this.from = (double) parameters.get("from");
+        this.to = (double) parameters.get("to");
+        this.step = (double) parameters.get("step");
     }
 }

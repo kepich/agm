@@ -1,5 +1,6 @@
 package org.app;
 
+import org.app.method.impl.WriteStep;
 import org.app.method.utils.MethodLoader;
 import org.json.simple.parser.ParseException;
 
@@ -12,5 +13,6 @@ public class Application {
         System.out.println("--||-- AUGMENTATOR --||--");
 
         ComplexMethod complexMethod = methodLoader.loadConfiguration("default.json");
+        complexMethod.addMethod(new WriteStep());
     }
 }

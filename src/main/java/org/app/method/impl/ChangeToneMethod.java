@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import java.util.List;
 
 public class ChangeToneMethod extends SimpleChangeMethod {
-    protected ChangeToneMethod(List<Object> resultQueue, JSONObject parameters) {
+    public ChangeToneMethod(List<Object> resultQueue, JSONObject parameters) {
         super(resultQueue, parameters);
     }
 

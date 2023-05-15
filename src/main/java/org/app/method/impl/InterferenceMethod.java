@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import java.util.List;
 
 public class InterferenceMethod extends SimpleChangeMethod {
-    protected InterferenceMethod(List<Object> resultQueue, JSONObject parameters) {
+    public InterferenceMethod(List<Object> resultQueue, JSONObject parameters) {
         super(resultQueue, parameters);
     }
 
