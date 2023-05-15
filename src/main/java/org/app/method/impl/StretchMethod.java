@@ -1,17 +1,19 @@
 package org.app.method.impl;
 
 import org.app.method.SimpleChangeMethod;
+import org.app.utils.wav.WavFile;
 import org.json.simple.JSONObject;
 
 import java.util.List;
 
 public class StretchMethod extends SimpleChangeMethod {
-    public StretchMethod(List<Object> resultQueue, JSONObject parameters) {
-        super(resultQueue, parameters);
+    public StretchMethod(JSONObject parameters) {
+        super(parameters);
     }
 
     @Override
-    public void run(Object element) {
-
+    public List<WavFile> run(WavFile element) {
+        System.out.println("StretchMethod " + element.toString());
+        return List.of(element, element);
     }
 }

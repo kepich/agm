@@ -1,6 +1,11 @@
 package org.app.method;
 
-import org.app.method.impl.*;
+import org.app.method.impl.ChangeToneMethod;
+import org.app.method.impl.ChangeVolumeMethod;
+import org.app.method.impl.InterferenceMethod;
+import org.app.method.impl.RandomVolumeMethod;
+import org.app.method.impl.SaveStretchMethod;
+import org.app.method.impl.StretchMethod;
 
 public enum MethodType {
     StretchMethod(StretchMethod.class),

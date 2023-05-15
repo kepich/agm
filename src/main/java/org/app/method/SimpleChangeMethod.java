@@ -1,16 +1,15 @@
 package org.app.method;
 
+import org.app.utils.wav.WavFile;
 import org.json.simple.JSONObject;
 
-import java.util.List;
-
-public abstract class SimpleChangeMethod extends AbstractMethod<Object> {
+public abstract class SimpleChangeMethod extends AbstractMethod<WavFile> {
     private double from;
     private double to;
     private double step;
 
-    protected SimpleChangeMethod(List<Object> resultQueue, JSONObject parameters) {
-        super(resultQueue, parameters);
+    protected SimpleChangeMethod(JSONObject parameters) {
+        super(parameters);
     }
 
     @Override
