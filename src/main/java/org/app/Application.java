@@ -10,7 +10,6 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
@@ -23,7 +22,7 @@ public class Application {
         complexMethod.addMethod(new WriteStep());
 
         List<WavFile> inputData = DataLoader.loadData("input");
-        List<CompletableFuture<List<?>>> res = complexMethod.execute(inputData);
+        List<CompletableFuture<List<?>>> res = complexMethod.execute(inputData, 0);
 
         ForkJoinPoolSingleton tpe = ForkJoinPoolSingleton.getInstance();
         tpe.awaitQuiescence(1000, TimeUnit.SECONDS);

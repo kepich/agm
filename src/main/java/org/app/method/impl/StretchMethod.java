@@ -2,9 +2,11 @@ package org.app.method.impl;
 
 import org.app.method.SimpleChangeMethod;
 import org.app.utils.wav.WavFile;
+import org.app.utils.wav.WavFileException;
 import org.json.simple.JSONObject;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 public class StretchMethod extends SimpleChangeMethod {
     public StretchMethod(JSONObject parameters) {
@@ -12,8 +14,26 @@ public class StretchMethod extends SimpleChangeMethod {
     }
 
     @Override
-    public List<WavFile> run(WavFile element) {
-        System.out.println("StretchMethod " + element.toString());
-        return List.of(element, element);
+    protected WavFile generate(WavFile element, Double value) {
+        String outputName = getRandomFileName();
+
+        int resultFramesNumber = (int) (element.getNumFrames() * value);
+
+        int[] resultFrames = new int[resultFramesNumber];
+        int[] sourceFrames = element.getFrames();
+
+        for (int i = 0; i < resultFramesNumber; i++) {
+            resultFrames[i] = sourceFrames[(int) (i / value)];
+        }
+
+        try {
+            WavFile wavFile = WavFile.newWavFile(new File(outputName), 1, resultFramesNumber, element.getValidBits(), element.getSampleRate());
+            wavFile.writeFrames(resultFrames, resultFrames.length);
+            wavFile.close();
+            return wavFile;
+        } catch (IOException | WavFileException e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+        }
     }
 }

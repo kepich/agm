@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComplexMethod {
-    private AbstractMethod<WavFile> method;
+    private AbstractMethod method;
     private ComplexMethod nextElement;
 
-    public void addMethod(AbstractMethod<WavFile> method) {
+    public void addMethod(AbstractMethod method) {
         if (this.method == null) {
             this.method = method;
         } else if (nextElement == null) {
@@ -26,8 +26,8 @@ public class ComplexMethod {
         }
     }
 
-    public void addMethods(List<AbstractMethod<WavFile>> methods) {
-        for (AbstractMethod<WavFile> method: methods){
+    public void addMethods(List<AbstractMethod> methods) {
+        for (AbstractMethod method: methods){
             this.addMethod(method);
         }
     }
@@ -36,17 +36,17 @@ public class ComplexMethod {
         return nextElement;
     }
 
-    public AbstractMethod<WavFile> getMethod() {
+    public AbstractMethod getMethod() {
         return method;
     }
 
-    public List<CompletableFuture<List<?>>> execute(List<WavFile> input) {
+    public List<CompletableFuture<List<?>>> execute(List<WavFile> input, int step) {
         ForkJoinPoolSingleton tpe = ForkJoinPoolSingleton.getInstance();
         return input.stream()
                 .map(obj -> CompletableFuture.supplyAsync(() -> this.method.run(obj), tpe))
                 .map(future -> future.thenApply(list -> {
                     if (this.nextElement != null)
-                        return this.nextElement.execute(list);
+                        return this.nextElement.execute(list, step + 1);
                     else
                         return list;
                 }))

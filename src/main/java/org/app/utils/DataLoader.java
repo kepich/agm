@@ -14,7 +14,11 @@ public class DataLoader {
         final File folder = new File(directoryPath);
         return Arrays.stream(folder.listFiles()).map(file -> {
             try {
-                return WavFile.openWavFile(file);
+                WavFile res = WavFile.openWavFile(file);
+                int[] buffer = new int[Math.toIntExact(res.getNumFrames() * res.getNumChannels())];
+                res.readFrames(buffer, res.getNumFrames());
+                res.close();
+                return res;
             } catch (IOException | WavFileException e) {
                 throw new RuntimeException(e);
             }

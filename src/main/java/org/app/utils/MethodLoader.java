@@ -3,7 +3,6 @@ package org.app.utils;
 import org.app.ComplexMethod;
 import org.app.method.AbstractMethod;
 import org.app.method.MethodType;
-import org.app.utils.wav.WavFile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,16 +20,16 @@ public class MethodLoader {
     public ComplexMethod loadConfiguration(String filename) throws IOException, ParseException {
         JSONArray a = (JSONArray) parser.parse(new FileReader(filename));
         ComplexMethod res = new ComplexMethod();
-        res.addMethods((List<AbstractMethod<WavFile>>) a.stream()
+        res.addMethods((List<AbstractMethod>) a.stream()
                 .map(obj -> this.parseMethod((JSONObject) obj))
                 .collect(Collectors.toList()));
 
         return res;
     }
 
-    private AbstractMethod<WavFile> parseMethod(JSONObject obj) {
+    private AbstractMethod parseMethod(JSONObject obj) {
         try {
-            return (AbstractMethod<WavFile>) MethodType.valueOf((String) obj.get("type"))
+            return (AbstractMethod) MethodType.valueOf((String) obj.get("type"))
                     .getCastType()
                     .getDeclaredConstructor(JSONObject.class)
                     .newInstance(obj);
