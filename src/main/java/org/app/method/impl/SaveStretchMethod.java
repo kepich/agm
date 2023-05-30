@@ -1,12 +1,14 @@
 package org.app.method.impl;
 
 import org.app.method.SimpleChangeMethod;
+import org.app.utils.FFT;
 import org.app.utils.wav.WavFile;
 import org.app.utils.wav.WavFileException;
 import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class SaveStretchMethod extends SimpleChangeMethod {
     public SaveStretchMethod(JSONObject parameters) {
@@ -17,17 +19,11 @@ public class SaveStretchMethod extends SimpleChangeMethod {
     protected WavFile generate(WavFile element, Double value) {
         String outputName = getRandomFileName();
 
-        int resultFramesNumber = (int) (element.getNumFrames() * value);
-
-        int[] resultFrames = new int[resultFramesNumber];
         int[] sourceFrames = element.getFrames();
-
-        for (int i = 0; i < resultFramesNumber; i++) {
-            resultFrames[i] = sourceFrames[(int) (i / value)];
-        }
+        int[] resultFrames = stretch(sourceFrames, value);
 
         try {
-            WavFile wavFile = WavFile.newWavFile(new File(outputName), 1, resultFramesNumber, element.getValidBits(), element.getSampleRate());
+            WavFile wavFile = WavFile.newWavFile(new File(outputName), 1, resultFrames.length, element.getValidBits(), element.getSampleRate());
             wavFile.writeFrames(resultFrames, resultFrames.length);
             wavFile.close();
             return wavFile;
@@ -37,59 +33,56 @@ public class SaveStretchMethod extends SimpleChangeMethod {
         }
     }
 
-    public double[] hanning(double[] source, int windowSize) {
+    public double[] hanning(int windowSize) {
+        double[] source = new double[windowSize];
         for (int i = 0; i < source.length; i++) {
             source[i] = Math.sin((Math.PI / 2) * Math.sin(Math.PI * ((float)i / windowSize)));
         }
         return source;
     }
 
-    private static Complex w(int k, int N)
-    {
-        if (k % N == 0) return new Complex(1, 0);
-        double arg = -2 * Math.PI * k / N;
-        return new Complex(Math.cos(arg), Math.sin(arg));
-    }
-    public static Complex[] fft(Complex[] x)
-    {
-        Complex[] X;
-        int N = x.length;
-        if (N == 2)
-        {
-            X = new Complex[2];
-            X[0] = x[0].add(x[1]);
-            X[1] = x[0].sub(x[1]);
-        }
-        else
-        {
-            Complex[] x_even = new Complex[N / 2];
-            Complex[] x_odd = new Complex[N / 2];
-            for (int i = 0; i < N / 2; i++)
-            {
-                x_even[i] = x[2 * i];
-                x_odd[i] = x[2 * i + 1];
-            }
-            Complex[] X_even = fft(x_even);
-            Complex[] X_odd = fft(x_odd);
-            X = new Complex[N];
-            for (int i = 0; i < N / 2; i++)
-            {
-                X[i] = X_even[i].add(w(i, N).mul(X_odd[i]));
-                X[i + N / 2] = X_even[i].sub(w(i, N).mul(X_odd[i]));
-            }
-        }
-        return X;
-    }
+    public int[] stretch(int[] audio, Double factor) {
+        int windowSize = 4096;
+        int h = 256;
 
-    public static Complex[] nfft(Complex[] X)
-    {
-        int N = X.length;
-        Complex[] X_n = new Complex[N];
-        for (int i = 0; i < N / 2; i++)
-        {
-            X_n[i] = X[N / 2 + i];
-            X_n[N / 2 + i] = X[i];
+        double[] phase = new double[windowSize];
+        double[] hanningWindow = hanning(windowSize);
+
+        double[] result = new double[(int) (audio.length / factor + windowSize)];
+
+        for (int i = 0; i < audio.length - windowSize + h; i += h * factor) {
+            Complex[] a1 = new Complex[windowSize];
+            Complex[] a2 = new Complex[windowSize];
+
+            for (int j = 0; j < windowSize; j++) {
+                a1[j] = new Complex(hanningWindow[j] * audio[i + j], 0);
+                a2[j] = new Complex(hanningWindow[j] * audio[i + h + j], 0);
+            }
+
+            Complex[] s1 = FFT.fft(a1);
+            Complex[] s2 = FFT.fft(a2);
+
+            for (int j = 0; j < windowSize; j++) {
+                phase[j] = (phase[j] + s2[j].divides(s1[j]).phase()) % 2 * Math.PI;
+            }
+
+            for (int j = 0; j < windowSize; j++) {
+                s2[j] = (new Complex(0, phase[j])).exp().scale(s2[j].abs());
+            }
+
+            Complex[] a2_rephased = FFT.ifft(s2);
+
+            int i2 = (int)(i / factor);
+            for (int j = 0; j < windowSize; j++) {
+                result[i2 + j] += (a2_rephased[j].scale(hanningWindow[j])).re();
+            }
         }
-        return X_n;
+
+        double max = Arrays.stream(result).max().orElse(1);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = 4096 * result[i] / max;
+        }
+
+        return Arrays.stream(result).mapToInt(d -> (int) d).toArray();
     }
 }
