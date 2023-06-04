@@ -1,8 +1,7 @@
-package org.app;
+package org.app.method;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.app.method.AbstractMethod;
 import org.app.utils.threading.ForkJoinPoolSingleton;
 import org.app.utils.wav.WavFile;
 
@@ -30,10 +29,6 @@ public class ComplexMethod {
         for (AbstractMethod method: methods){
             this.addMethod(method);
         }
-    }
-
-    public ComplexMethod getNextElement() {
-        return nextElement;
     }
 
     public AbstractMethod getMethod() {

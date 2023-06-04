@@ -1,6 +1,6 @@
 package org.app.utils;
 
-import org.app.ComplexMethod;
+import org.app.method.ComplexMethod;
 import org.app.method.AbstractMethod;
 import org.app.method.MethodType;
 import org.json.simple.JSONArray;

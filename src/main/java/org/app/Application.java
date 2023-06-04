@@ -1,5 +1,6 @@
 package org.app;
 
+import org.app.method.ComplexMethod;
 import org.app.method.impl.WriteStep;
 import org.app.utils.DataLoader;
 import org.app.utils.MethodLoader;

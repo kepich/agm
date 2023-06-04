@@ -1,7 +1,8 @@
 package org.app.method.impl;
 
 import org.app.method.SimpleChangeMethod;
-import org.app.utils.FFT;
+import org.app.utils.calc.Complex;
+import org.app.utils.calc.FFT;
 import org.app.utils.wav.WavFile;
 import org.app.utils.wav.WavFileException;
 import org.json.simple.JSONObject;

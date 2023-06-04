@@ -1,4 +1,4 @@
-package org.app.method.impl;
+package org.app.utils.calc;
 
 import java.util.Objects;
 
