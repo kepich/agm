@@ -1,5 +1,7 @@
 package org.app.method.impl;
 
+import com.github.psambit9791.jdsp.transform.InverseShortTimeFourier;
+import com.github.psambit9791.jdsp.transform.ShortTimeFourier;
 import org.app.method.SimpleChangeMethod;
 import org.app.utils.calc.Complex;
 import org.app.utils.calc.FFT;
@@ -10,6 +12,12 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class SaveStretchMethod extends SimpleChangeMethod {
     public SaveStretchMethod(JSONObject parameters) {
@@ -37,7 +45,7 @@ public class SaveStretchMethod extends SimpleChangeMethod {
     public static double[] hanning(int windowSize) {
         double[] source = new double[windowSize];
         for (int i = 0; i < source.length; i++) {
-            source[i] = Math.sin((Math.PI / 2) * Math.sin(Math.PI * ((float)i / windowSize)));
+            source[i] = sin((PI / 2) * sin(PI * ((float)i / windowSize)));
         }
         return source;
     }
@@ -51,7 +59,8 @@ public class SaveStretchMethod extends SimpleChangeMethod {
 
         double[] result = new double[(int) (audio.length / factor + windowSize)];
 
-        for (int i = 0; i < audio.length - windowSize + h; i += h * factor) {
+        double offset = h * factor;
+        for (int i = 0; i < audio.length - windowSize - h; i += offset) {
             Complex[] a1 = new Complex[windowSize];
             Complex[] a2 = new Complex[windowSize];
 
@@ -68,7 +77,7 @@ public class SaveStretchMethod extends SimpleChangeMethod {
             }
 
             for (int j = 0; j < windowSize; j++) {
-                s2[j] = (new Complex(0, phase[j])).exp().scale(s2[j].abs());
+                s2[j] = (new Complex(phase[j], 0)).exp().scale(s2[j].abs());
             }
 
             Complex[] a2_rephased = FFT.ifft(s2);

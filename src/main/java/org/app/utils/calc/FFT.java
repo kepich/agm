@@ -1,67 +1,45 @@
 package org.app.utils.calc;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class FFT {
-    public static Complex[] fft(Complex[] x) {
-        int n = x.length;
 
-        // base case
-        if (n == 1) return new Complex[] { x[0] };
+    private static Complex[] fft(Complex[] a, boolean invert) {
+        int n = a.length;
+        if (n == 1) return a;
 
-        // radix 2 Cooley-Tukey FFT
-        if (n % 2 != 0) {
-            throw new IllegalArgumentException("n is not a power of 2");
+        Complex[] a0 = new Complex[n / 2], a1 = new Complex[n / 2];
+        for (int i = 0, j = 0; i < n; i += 2, ++j) {
+            a0[j] = a[i];
+            a1[j] = a[i + 1];
         }
+        fft(a0, invert);
+        fft(a1, invert);
 
-        // compute FFT of even terms
-        Complex[] even = new Complex[n/2];
-        for (int k = 0; k < n/2; k++) {
-            even[k] = x[2*k];
-        }
-        Complex[] evenFFT = fft(even);
-
-        // compute FFT of odd terms
-        Complex[] odd  = even;  // reuse the array (to avoid n log n space)
-        for (int k = 0; k < n/2; k++) {
-            odd[k] = x[2*k + 1];
-        }
-        Complex[] oddFFT = fft(odd);
-
-        // combine
+        double ang = 2 * PI / n * (invert ? -1 : 1);
+        Complex w = new Complex(1, 0), wn = new Complex(cos(ang), sin(ang));
         Complex[] y = new Complex[n];
-        for (int k = 0; k < n/2; k++) {
-            double kth = -2 * k * Math.PI / n;
-            Complex wk = new Complex(Math.cos(kth), Math.sin(kth));
-            y[k]       = evenFFT[k].plus (wk.times(oddFFT[k]));
-            y[k + n/2] = evenFFT[k].minus(wk.times(oddFFT[k]));
+        for (int i = 0; i < n / 2; ++i) {
+            y[i] = a0[i].plus(w.times(a1[i]));
+            y[i + n / 2] = a0[i].minus(w.times(a1[i]));
+            if (invert) {
+                y[i] = y[i].scale(0.5);
+                y[i + n / 2] = y[i + n / 2].scale(0.5);
+            }
+            w = w.times(wn);
         }
         return y;
+    }
+
+    public static Complex[] fft(Complex[] x) {
+        return fft(x, false);
     }
 
 
     // compute the inverse FFT of x[], assuming its length n is a power of 2
     public static Complex[] ifft(Complex[] x) {
-        int n = x.length;
-        Complex[] y = new Complex[n];
-
-        // take conjugate
-        for (int i = 0; i < n; i++) {
-            y[i] = x[i].conjugate();
-        }
-
-        // compute forward FFT
-        y = fft(y);
-
-        // take conjugate again
-        for (int i = 0; i < n; i++) {
-            y[i] = y[i].conjugate();
-        }
-
-        // divide by n
-        for (int i = 0; i < n; i++) {
-            y[i] = y[i].scale(1.0 / n);
-        }
-
-        return y;
-
+        return fft(x, true);
     }
 }

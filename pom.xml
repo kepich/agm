@@ -25,6 +25,11 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.psambit9791</groupId>
+            <artifactId>jdsp</artifactId>
+            <version>2.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>
