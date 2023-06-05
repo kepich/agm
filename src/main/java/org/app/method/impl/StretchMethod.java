@@ -19,12 +19,7 @@ public class StretchMethod extends SimpleChangeMethod {
 
         int resultFramesNumber = (int) (element.getNumFrames() * value);
 
-        int[] resultFrames = new int[resultFramesNumber];
-        int[] sourceFrames = element.getFrames();
-
-        for (int i = 0; i < resultFramesNumber; i++) {
-            resultFrames[i] = sourceFrames[(int) (i / value)];
-        }
+        int[] resultFrames = modify(element, value);
 
         try {
             WavFile wavFile = WavFile.newWavFile(new File(outputName), 1, resultFramesNumber, element.getValidBits(), element.getSampleRate());
@@ -35,5 +30,17 @@ public class StretchMethod extends SimpleChangeMethod {
             System.out.println(e);
             throw new RuntimeException(e);
         }
+    }
+
+    public static int[] modify(WavFile element, Double value) {
+        int resultFramesNumber = (int) (element.getNumFrames() * value);
+
+        int[] resultFrames = new int[resultFramesNumber];
+        int[] sourceFrames = element.getFrames();
+
+        for (int i = 0; i < resultFramesNumber; i++) {
+            resultFrames[i] = sourceFrames[(int) (i / value)];
+        }
+        return resultFrames;
     }
 }

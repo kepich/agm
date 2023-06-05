@@ -1,6 +1,6 @@
 [
   {
-    "type": "SaveStretchMethod",
+    "type": "StretchMethod",
     "from": 0.5,
     "to": 1.5,
     "step": 0.5

@@ -34,7 +34,7 @@ public class SaveStretchMethod extends SimpleChangeMethod {
         }
     }
 
-    public double[] hanning(int windowSize) {
+    public static double[] hanning(int windowSize) {
         double[] source = new double[windowSize];
         for (int i = 0; i < source.length; i++) {
             source[i] = Math.sin((Math.PI / 2) * Math.sin(Math.PI * ((float)i / windowSize)));
@@ -42,7 +42,7 @@ public class SaveStretchMethod extends SimpleChangeMethod {
         return source;
     }
 
-    public int[] stretch(int[] audio, Double factor) {
+    public static int[] stretch(int[] audio, Double factor) {
         int windowSize = 4096;
         int h = 256;
 
